@@ -9,7 +9,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -93,20 +92,30 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public void windFlywheel(double rpm) {
-
-    // Winds Flywheel using PID control to passed rpm
-    if (rpm == 0) {
-      shooterPIDController.setReference(0, CANSparkMax.ControlType.kVoltage);
+  private double getTargetRPM() {
+    // Check if override is active, return corresponding RPM
+    if (BOverride.getBoolean(false)) {
+      SAimMode.setString("OVERRIDE");
+      return DTRPM.getDouble(0);
     } else {
-      DTRPM.setDouble(rpm);
-      targetRPM = rpm;
-      shooterPIDController.setReference(
-          rpm,
-          CANSparkMax.ControlType.kVelocity,
-          ShooterConstants.kMaxISlot,
-          shooterFF.calculate(rpm / 60.0));
+      SAimMode.setString("NORMAL");
+      return ShooterConstants.fenderRPM;
     }
+  }
+
+  public void windShooter() {
+    // Wind shooter using PID control to target RPM
+    targetRPM = getTargetRPM();
+    DTRPM.setDouble(targetRPM);
+    shooterPIDController.setReference(
+        targetRPM,
+        CANSparkMax.ControlType.kVelocity,
+        ShooterConstants.kMaxISlot,
+        shooterFF.calculate(targetRPM / 60.0));
+  }
+  
+  public void stopShooter(){
+    shooterPIDController.setReference(0, CANSparkMax.ControlType.kVoltage);
   }
 
   public void resetIAccum() {
@@ -129,28 +138,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public boolean wheelReady() {
     return (smoothRPM > targetRPM - 56 && smoothRPM < targetRPM + 56);
-  }
-
-  public double getTY() {
-    // Returns TY, the vertical angle of the target from the limelight
-    return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
-  }
-
-  public double getDistance() {
-    // Uses Limelight to find distance to High Goal
-    return (ShooterConstants.highHeight - ShooterConstants.LLHeight)
-        / Math.tan(Math.toRadians((getTY() + ShooterConstants.LLAngle))); // Return distance in ft
-  }
-
-  public void prime() {
-    // Check what aimMode is active, winds flywheel
-    if (BOverride.getBoolean(false)) {
-      windFlywheel(DTRPM.getDouble(0));
-      SAimMode.setString("OVERRIDE");
-    } else {
-      windFlywheel(ShooterConstants.fenderRPM);
-      SAimMode.setString("NORMAL");
-    }
   }
 
   @Override
