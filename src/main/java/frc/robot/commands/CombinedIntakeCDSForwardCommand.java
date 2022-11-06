@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.CDSSubsystem;
-import frc.robot.subsystems.CDSSubsystem.ManagementState;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -18,9 +17,6 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
 
   private final ShooterSubsystem shooterSubsystem;
   private final IntakeSubsystem intakeSubsystem;
-  private final CDSBallManagementCommand ballManagement;
-
-  private ManagementState lastState;
 
   public CombinedIntakeCDSForwardCommand(
       IntakeSubsystem mIntakeSubsystem,
@@ -34,32 +30,20 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
     intakeSubsystem = mIntakeSubsystem;
     CDSSubsystem = mCDSSubsystem;
     shooterSubsystem = mShooterSubsystem;
-
-    ballManagement = new CDSBallManagementCommand(CDSSubsystem, intakeSubsystem, shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    lastState = ManagementState.EJECT;
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (CDSSubsystem.getState() == ManagementState.IDLE) {
-      // If mangement isn't doing anything, run button normally
-      CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
-      CDSSubsystem.CDSWheelToggle(false);
-      intakeSubsystem.toggleIntake(false);
-      shooterSubsystem.runCargo(ShooterConstants.cargoReverse);
-      intakeSubsystem.deployIntake();
-
-    } else {
-      // run ball management if it's in the middle of doing something
-      ballManagement.execute();
-    }
-    lastState = CDSSubsystem.getState();
+    CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
+    CDSSubsystem.CDSWheelToggle(false);
+    intakeSubsystem.toggleIntake(false);
+    shooterSubsystem.runCargo(ShooterConstants.cargoReverse);
+    intakeSubsystem.deployIntake();
   }
 
   // Called once the command ends or is interrupted.

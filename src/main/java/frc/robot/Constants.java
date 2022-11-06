@@ -143,9 +143,6 @@ public final class Constants {
   public static final int sensorsDownLimit = 3;
 
   // CDS Constants
-  public static final boolean ballManagementEnabled =
-      true; // TODO: turning it on messes with shooter on the test bot
-
   public static final double CDSBeltSpeed = .75;
   public static final double CDSAutoBeltSpeed = .75;
   public static final double CDSWheelControllerSpeed = 0.80;
@@ -158,17 +155,6 @@ public final class Constants {
   public static final double reverseStopperWheelSpeed = -0.125;
  
   public static final class ShooterConstants {
-    // LL Placement
-    public static final double highHeight =
-        8.0 + 8.0 / 12.0; // Height of the high goal in ft from the carpet
-    public static final double lowHeight =
-        5.0 + 7.75 / 12.0; // Height of the low goal in ft from the carpet
-    public static final double LLHeight =
-        28.0 / 12.0; // Height of the limelight in ft from the carpet
-    public static final double LLAngle =
-        54.0; // Angle that the limelight is mounted at from a vertical plane, ensure this is as
-    // exact as possible
-
     // Motor Speeds
     public static final double cargoForward = 1.0;
     public static final double cargoReverse = -0.4;

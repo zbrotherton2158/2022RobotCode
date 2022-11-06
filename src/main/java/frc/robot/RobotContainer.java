@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
-import frc.robot.commands.CDSBallManagementCommand;
 import frc.robot.commands.CDSForwardCommand;
 import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.ClimbSequence1;
@@ -53,7 +52,6 @@ public class RobotContainer {
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
   private IntakeForwardCommand intakeForwardCommand;
   private IntakeReverseCommand intakeReverseCommand;
-  private CDSBallManagementCommand ballManagementCommand;
   private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
 
   private ShooterHeld shooterHeld;
@@ -127,13 +125,9 @@ public class RobotContainer {
       intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem, cdsSubsystem);
       outtakeCommand = new OuttakeCommand(intakeSubsystem, cdsSubsystem);
 
-      if (Constants.ballManagementEnabled) {
+      if (cdsSubsystem != null) {
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
-        ballManagementCommand =
-            new CDSBallManagementCommand(cdsSubsystem, intakeSubsystem, shooterSubsystem);
-        cdsSubsystem.setDefaultCommand(ballManagementCommand);
-        combinedIntakeCDS =
-            new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
+        combinedIntakeCDS = new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
       }
     }
 
