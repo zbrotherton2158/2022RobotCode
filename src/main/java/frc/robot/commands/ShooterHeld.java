@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -52,7 +53,7 @@ public class ShooterHeld extends CommandBase {
       if (i > 0 || !LLEnabled || m_LimelightSubsystem.calculatePID() == 0.0) {
         // if (i > 1) {
         m_CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
-        m_ShooterSubsystem.runCargo(Constants.Shooter.cargoForward);
+        m_ShooterSubsystem.runCargo(ShooterConstants.cargoForward);
         m_ShooterSubsystem.setCargoBoolean(true);
         // }
         // i++;

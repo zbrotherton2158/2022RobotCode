@@ -5,14 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
 import frc.robot.commands.CDSBallManagementCommand;
@@ -62,7 +59,7 @@ public class RobotContainer {
   private CDSBallManagementCommand ballManagementCommand;
   private CombinedIntakeCDSForwardCommand combinedIntakeCDS;
 
-  private ShooterHeld shooterHeldLow, shooterHeldAuto;
+  private ShooterHeld shooterHeld;
   private CDSForwardCommand CDSForwardCommand;
   private OuttakeCommand outtakeCommand;
   private LimelightAlign limelightAlign;
@@ -147,13 +144,9 @@ public class RobotContainer {
     }
 
     if (shooterSubsystem != null && cdsSubsystem != null) {
-      shooterHeldAuto =
-          new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
-      shooterHeldLow =
-          new ShooterHeld(
-              shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
+      shooterHeld = new ShooterHeld(shooterSubsystem, limelightSubsystem, cdsSubsystem, (limelightSubsystem != null));
     }
+
     if (limelightSubsystem != null && driveBaseSubsystem != null) {
       limelightAlign = new LimelightAlign(limelightSubsystem, driveBaseSubsystem);
     }
@@ -187,13 +180,8 @@ public class RobotContainer {
       OI.Driver.getIntakeButton().whileHeld(combinedIntakeCDS);
     }
 
-    if (shooterSubsystem != null && shooterHeldLow != null && shooterHeldAuto != null) {
-      OI.Driver.getShootButton().whileHeld(
-          shooterHeldLow.beforeStarting(
-              () -> {
-                shooterSubsystem.setAimMode(Constants.AimModes.LOW);
-              },
-              shooterSubsystem));
+    if (shooterSubsystem != null && shooterHeld != null && shooterHeld != null) {
+      OI.Driver.getShootButton().whileHeld(shooterHeld);
     }
 
     if (climbSubsystem != null) {
