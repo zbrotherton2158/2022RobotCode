@@ -6,30 +6,27 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.StopperSubsystem;
 
 public class CombinedIntakeCDSForwardCommand extends CommandBase {
   /** Creates a new OuttakeCommand. */
-  private final CDSSubsystem CDSSubsystem;
-
-  private final ShooterSubsystem shooterSubsystem;
-  private final IntakeSubsystem intakeSubsystem;
+  private CDSSubsystem CDSSubsystem;
+  private StopperSubsystem stopperSubsystem;
+  private IntakeSubsystem intakeSubsystem;
 
   public CombinedIntakeCDSForwardCommand(
       IntakeSubsystem mIntakeSubsystem,
       CDSSubsystem mCDSSubsystem,
-      ShooterSubsystem mShooterSubsystem) {
+      StopperSubsystem stopperSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(mShooterSubsystem);
     addRequirements(mIntakeSubsystem);
     addRequirements(mCDSSubsystem);
-    addRequirements(mShooterSubsystem);
+    addRequirements(stopperSubsystem);
+    this.stopperSubsystem = stopperSubsystem;
     intakeSubsystem = mIntakeSubsystem;
     CDSSubsystem = mCDSSubsystem;
-    shooterSubsystem = mShooterSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -42,7 +39,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
     CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
     CDSSubsystem.CDSWheelToggle(false);
     intakeSubsystem.toggleIntake(false);
-    shooterSubsystem.runCargo(ShooterConstants.cargoReverse);
+    stopperSubsystem.reverse();
     intakeSubsystem.deployIntake();
   }
 
@@ -51,7 +48,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
   public void end(boolean interrupted) {
     CDSSubsystem.stopCDS();
     intakeSubsystem.stopIntake();
-    shooterSubsystem.runCargo(0.0);
+    stopperSubsystem.stop();
     intakeSubsystem.retractIntake();
   }
 

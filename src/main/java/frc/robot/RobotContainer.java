@@ -28,6 +28,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveBaseSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.StopperSubsystem;
 
 // This class is where the bulk of the robot should be declared. Since Command-based is a
 // "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -47,6 +48,7 @@ public class RobotContainer {
   private static CDSSubsystem cdsSubsystem;
   private static IntakeSubsystem intakeSubsystem;
   private static ShooterSubsystem shooterSubsystem;
+  private static StopperSubsystem stopperSubsystem;
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
@@ -107,6 +109,8 @@ public class RobotContainer {
     shooterSubsystem = new ShooterSubsystem();
 
     climbSubsystem = new ClimbSubsystem();
+    
+    stopperSubsystem = new StopperSubsystem();
   }
 
   private void initCommands() {
@@ -118,7 +122,7 @@ public class RobotContainer {
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
     }
     if (cdsSubsystem != null && shooterSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(cdsSubsystem, shooterSubsystem);
+      CDSForwardCommand = new CDSForwardCommand(cdsSubsystem, stopperSubsystem);
     }
     if (intakeSubsystem != null && cdsSubsystem != null) {
       intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
@@ -127,12 +131,12 @@ public class RobotContainer {
 
       if (cdsSubsystem != null) {
         intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem, cdsSubsystem);
-        combinedIntakeCDS = new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, shooterSubsystem);
+        combinedIntakeCDS = new CombinedIntakeCDSForwardCommand(intakeSubsystem, cdsSubsystem, stopperSubsystem);
       }
     }
 
     if (shooterSubsystem != null && cdsSubsystem != null) {
-      shooterHeld = new ShooterHeld(shooterSubsystem, cdsSubsystem);
+      shooterHeld = new ShooterHeld(shooterSubsystem, cdsSubsystem, stopperSubsystem);
     }
 
     if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
@@ -222,7 +226,8 @@ public class RobotContainer {
             shooterSubsystem,
             cdsSubsystem,
             intakeSubsystem,
-            climbSubsystem);
+            climbSubsystem,
+            stopperSubsystem);
     return autonMode.getAutonCommand();
   }
 

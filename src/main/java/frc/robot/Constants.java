@@ -155,10 +155,6 @@ public final class Constants {
   public static final double reverseStopperWheelSpeed = -0.125;
  
   public static final class ShooterConstants {
-    // Motor Speeds
-    public static final double cargoForward = 1.0;
-    public static final double cargoReverse = -0.4;
-
     public static final double fenderRPM = 1400;
 
     // PID settings
@@ -172,6 +168,11 @@ public final class Constants {
     public static final double kSg = 0.56246;
     public static final double kVg = 0.13981;
     public static final double kAg = 0.0087876;
+  }
+
+  public static final class StopperConstants {
+    public static final double forwardSpeed = 1.0;
+    public static final double reverseSpeed = -0.4;
   }
 
   // Climb Constants
