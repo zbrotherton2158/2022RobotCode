@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.common.hardware.MotorController;
 import frc.robot.common.hardware.MotorController.MotorConfig;
 
@@ -45,7 +46,7 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeDeployed = false;
     intakeMotor = MotorController.constructMotor(MotorConfig.intakeMotor);
     deployMotor = MotorController.constructMotor(MotorConfig.intakeDeploy);
-    deployPIDController = MotorController.constructPIDController(deployMotor, Constants.intakeDeployPID);
+    deployPIDController = MotorController.constructPIDController(deployMotor, IntakeConstants.intakeDeployPID);
     deployEncoder = deployMotor.getEncoder();
     deployMotor.setIdleMode(IdleMode.kBrake);
     deployEncoder.setPosition(0);
@@ -58,29 +59,29 @@ public class IntakeSubsystem extends SubsystemBase {
   public void toggleIntake(boolean reverse) {
     // only runs intake if ball count isn't too high (addresses #140)
     if (reverse) {
-      intakeMotor.set(-Constants.intakeMotorSpeed);
+      intakeMotor.set(-IntakeConstants.intakeMotorSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("Intake Motor Direction", "Reverse");
-        SmartDashboard.putNumber("Intake Motor Speed", -Constants.intakeMotorSpeed);
+        SmartDashboard.putNumber("Intake Motor Speed", -IntakeConstants.intakeMotorSpeed);
       }
       DIntakeSpeed.setDouble(-1);
     } else {
-      intakeMotor.set(Constants.intakeMotorSpeed);
+      intakeMotor.set(IntakeConstants.intakeMotorSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("Intake Motor Direction", "Forward");
-        SmartDashboard.putNumber("Intake Motor Speed", Constants.intakeMotorSpeed);
+        SmartDashboard.putNumber("Intake Motor Speed", IntakeConstants.intakeMotorSpeed);
       }
       DIntakeSpeed.setDouble(1);
     }
   }
 
   public void deployIntake() {
-    deployPIDController.setReference(Constants.intakeDeployPos, CANSparkMax.ControlType.kPosition);
+    deployPIDController.setReference(IntakeConstants.intakeDeployPos, CANSparkMax.ControlType.kPosition);
     intakeDeployed = true;
   }
 
   public void retractIntake() {
-    deployPIDController.setReference(Constants.intakeRetractPos, CANSparkMax.ControlType.kPosition);
+    deployPIDController.setReference(IntakeConstants.intakeRetractPos, CANSparkMax.ControlType.kPosition);
     intakeDeployed = false;
   }
 

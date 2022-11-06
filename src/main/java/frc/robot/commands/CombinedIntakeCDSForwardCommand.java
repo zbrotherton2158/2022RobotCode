@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.CDSConstants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.StopperSubsystem;
@@ -36,7 +36,7 @@ public class CombinedIntakeCDSForwardCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    CDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
+    CDSSubsystem.CDSBeltToggle(false, CDSConstants.CDSBeltSpeed);
     CDSSubsystem.CDSWheelToggle(false);
     intakeSubsystem.toggleIntake(false);
     stopperSubsystem.reverse();

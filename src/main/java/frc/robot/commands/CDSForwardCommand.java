@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.CDSConstants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.StopperSubsystem;
 
@@ -26,7 +26,7 @@ public class CDSForwardCommand extends CommandBase {
   @Override
   public void initialize() {
     mCDSSubsystem.CDSWheelToggle(false);
-    mCDSSubsystem.CDSBeltToggle(false, Constants.CDSBeltSpeed);
+    mCDSSubsystem.CDSBeltToggle(false, CDSConstants.CDSBeltSpeed);
     stopperSubsystem.reverse();
   }
 

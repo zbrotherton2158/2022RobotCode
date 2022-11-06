@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.CDSConstants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StopperSubsystem;
@@ -44,7 +44,7 @@ public class ShooterPressed extends CommandBase {
       // Otherwise, alignment is checked.
       if (i > 0) {
         // if (i == 0) {
-        m_CDSSubsystem.CDSBeltToggle(false, Constants.CDSAutoBeltSpeed);
+        m_CDSSubsystem.CDSBeltToggle(false, CDSConstants.CDSAutoBeltSpeed);
         stopperSubsystem.forward();
         // }
         i++;

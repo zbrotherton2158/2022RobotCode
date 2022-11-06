@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.CDSConstants;
 import frc.robot.common.hardware.MotorController.MotorConfig;
 import frc.robot.common.hardware.MotorController;
 
@@ -47,43 +48,43 @@ public class CDSSubsystem extends SubsystemBase {
 
   public void CDSToggleAll(boolean reverse) {
     if (reverse) {
-      singulatorOneMotor.set(-Constants.CDSWheelControllerSpeed);
+      singulatorOneMotor.set(-CDSConstants.CDSWheelControllerSpeed);
       DCDSSpeed.setDouble(-1);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Reverse");
-        SmartDashboard.putNumber("CDS Wheel Speed 2", -Constants.CDSWheelControllerSpeed);
+        SmartDashboard.putNumber("CDS Wheel Speed 2", -CDSConstants.CDSWheelControllerSpeed);
       }
 
-      CDSBeltMotor.set(-Constants.CDSBeltSpeed);
+      CDSBeltMotor.set(-CDSConstants.CDSBeltSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Belt Direction 3", "Reverse");
-        SmartDashboard.putNumber("CDS Belt Speed 2", -Constants.CDSBeltSpeed);
+        SmartDashboard.putNumber("CDS Belt Speed 2", -CDSConstants.CDSBeltSpeed);
       }
     } else {
       DCDSSpeed.setDouble(1);
-      singulatorOneMotor.set(Constants.CDSWheelControllerSpeed);
+      singulatorOneMotor.set(CDSConstants.CDSWheelControllerSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Forward");
-        SmartDashboard.putNumber("CDS Wheel Speed 3", Constants.CDSWheelControllerSpeed);
+        SmartDashboard.putNumber("CDS Wheel Speed 3", CDSConstants.CDSWheelControllerSpeed);
       }
 
-      CDSBeltMotor.set(Constants.CDSBeltSpeed);
+      CDSBeltMotor.set(CDSConstants.CDSBeltSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Belt Direction 4", "Forward");
-        SmartDashboard.putNumber("CDS Belt Speed 3", Constants.CDSBeltSpeed);
+        SmartDashboard.putNumber("CDS Belt Speed 3", CDSConstants.CDSBeltSpeed);
       }
     }
   }
 
   public void CDSWheelToggle(boolean reverse) {
     if (reverse) {
-      singulatorOneMotor.set(-Constants.CDSWheelControllerSpeed);
+      singulatorOneMotor.set(-CDSConstants.CDSWheelControllerSpeed);
       SmartDashboard.putString("CDS Wheel Direction", "Reverse");
     } else {
-      singulatorOneMotor.set(Constants.CDSWheelControllerSpeed);
+      singulatorOneMotor.set(CDSConstants.CDSWheelControllerSpeed);
       if (Constants.DebugMode) {
         SmartDashboard.putString("CDS Wheel Direction", "Forward");
-        SmartDashboard.putNumber("CDS Wheel Speed 4", Constants.CDSWheelControllerSpeed);
+        SmartDashboard.putNumber("CDS Wheel Speed 4", CDSConstants.CDSWheelControllerSpeed);
       }
     }
   }

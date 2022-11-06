@@ -121,38 +121,28 @@ public final class Constants {
   public static final double defaultInitialWaitTime = 0;
 
   // Encoder constants
-
-  // Controller modes
-  public static final boolean oneController = true;
-
-  // Encoder Constants
   // TODO: Change to true when using external encoders
   public static final boolean usingExternal = false;
   public static final int encoderCountsPerRev = 8192;
 
-  // Intake Constants
-  public static final double[] intakeDeployPID = {0.25, 0, 1};
-  public static final double intakeDeployPos = 72;
-  public static final double intakeRetractPos = 5;
-  public static final int intakeDeployCurrent = 30;
+  public static final class IntakeConstants{
+    public static final double[] intakeDeployPID = {0.25, 0, 1};
+    public static final double intakeDeployPos = 72;
+    public static final double intakeRetractPos = 5;
+    public static final int intakeDeployCurrent = 30;
+    public static final double intakeMotorSpeed = 1.0;
+  }
 
-  public static final double intakeMotorSpeed = 1.0;
-  public static final int initialBallSensorChannel = 0;
-  public static final int middleBallSensorChannel = 1;
-  public static final int finalBallSensorChannel = 2;
-  public static final int sensorsDownLimit = 3;
+  public static final class CDSConstants{
+    public static final double CDSBeltSpeed = .75;
+    public static final double CDSAutoBeltSpeed = .75;
+    public static final double CDSWheelControllerSpeed = 0.80;
+  }
 
-  // CDS Constants
-  public static final double CDSBeltSpeed = .75;
-  public static final double CDSAutoBeltSpeed = .75;
-  public static final double CDSWheelControllerSpeed = 0.80;
-  public static final int frontSensorActivation = 200;
-  public static final int middleSensorActivation = 450;
-  public static final int backSensorActivation = 600;
-
-  public static final boolean testMode = false; // if false CDS will eject balls of wrong color
-
-  public static final double reverseStopperWheelSpeed = -0.125;
+  public static final class StopperConstants {
+    public static final double forwardSpeed = 1.0;
+    public static final double reverseSpeed = -0.4;
+  }
  
   public static final class ShooterConstants {
     public static final double fenderRPM = 1400;
@@ -168,11 +158,6 @@ public final class Constants {
     public static final double kSg = 0.56246;
     public static final double kVg = 0.13981;
     public static final double kAg = 0.0087876;
-  }
-
-  public static final class StopperConstants {
-    public static final double forwardSpeed = 1.0;
-    public static final double reverseSpeed = -0.4;
   }
 
   // Climb Constants
