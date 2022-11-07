@@ -126,17 +126,15 @@ public final class Constants {
   public static final int encoderCountsPerRev = 8192;
 
   public static final class IntakeConstants{
-    public static final double[] intakeDeployPID = {0.25, 0, 1};
-    public static final double intakeDeployPos = 72;
-    public static final double intakeRetractPos = 5;
-    public static final int intakeDeployCurrent = 30;
-    public static final double intakeMotorSpeed = 1.0;
+    public static final double[] PIDArray = {0.25, 0, 1};
+    public static final double deployPosition = 72;
+    public static final double retractPosition = 5;
+    public static final double intakeSpeed = 1.0;
   }
 
   public static final class CDSConstants{
-    public static final double CDSBeltSpeed = .75;
-    public static final double CDSAutoBeltSpeed = .75;
-    public static final double CDSWheelControllerSpeed = 0.80;
+    public static final double singulatorSpeed = 0.80;
+    public static final double beltSpeed = 0.75;
   }
 
   public static final class StopperConstants {

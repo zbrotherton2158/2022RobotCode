@@ -5,28 +5,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.CDSConstants;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.StopperSubsystem;
 
 public class CDSForwardCommand extends CommandBase {
-  /** Creates a new IntakeForwardCommand. */
-  private CDSSubsystem mCDSSubsystem;
+  private CDSSubsystem CDSSubsystem;
   private StopperSubsystem stopperSubsystem;
 
   public CDSForwardCommand(CDSSubsystem CDSSubsystem, StopperSubsystem stopperSubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(CDSSubsystem);
     addRequirements(stopperSubsystem);
-    mCDSSubsystem = CDSSubsystem;
+    this.CDSSubsystem = CDSSubsystem;
     this.stopperSubsystem = stopperSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mCDSSubsystem.CDSWheelToggle(false);
-    mCDSSubsystem.CDSBeltToggle(false, CDSConstants.CDSBeltSpeed);
+    CDSSubsystem.runCDS(false);
     stopperSubsystem.reverse();
   }
 
@@ -37,7 +33,7 @@ public class CDSForwardCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mCDSSubsystem.stopCDS();
+    CDSSubsystem.stopCDS();
     stopperSubsystem.stop();
   }
 

@@ -5,51 +5,36 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.CDSConstants;
 import frc.robot.subsystems.CDSSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.StopperSubsystem;
 
-public class CombinedIntakeCDSForwardCommand extends CommandBase {
-  /** Creates a new OuttakeCommand. */
+public class CDSReverseCommand extends CommandBase {
   private CDSSubsystem CDSSubsystem;
   private StopperSubsystem stopperSubsystem;
-  private IntakeSubsystem intakeSubsystem;
 
-  public CombinedIntakeCDSForwardCommand(
-      IntakeSubsystem mIntakeSubsystem,
-      CDSSubsystem mCDSSubsystem,
-      StopperSubsystem stopperSubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(mIntakeSubsystem);
-    addRequirements(mCDSSubsystem);
+  public CDSReverseCommand(CDSSubsystem CDSSubsystem, StopperSubsystem stopperSubsystem) {
+    addRequirements(CDSSubsystem);
     addRequirements(stopperSubsystem);
+    this.CDSSubsystem = CDSSubsystem;
     this.stopperSubsystem = stopperSubsystem;
-    intakeSubsystem = mIntakeSubsystem;
-    CDSSubsystem = mCDSSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    CDSSubsystem.runCDS(true);
+    stopperSubsystem.reverse();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    CDSSubsystem.CDSBeltToggle(false, CDSConstants.CDSBeltSpeed);
-    CDSSubsystem.CDSWheelToggle(false);
-    intakeSubsystem.toggleIntake(false);
-    stopperSubsystem.reverse();
-    intakeSubsystem.deployIntake();
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     CDSSubsystem.stopCDS();
-    intakeSubsystem.stopIntake();
     stopperSubsystem.stop();
-    intakeSubsystem.retractIntake();
   }
 
   // Returns true when the command should end.
