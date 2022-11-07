@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,15 +12,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.Auton;
 import frc.robot.commands.AutonModes;
-import frc.robot.commands.CDSForwardCommand;
-import frc.robot.commands.CDSReverseCommand;
+import frc.robot.commands.CDSForward;
+import frc.robot.commands.CDSReverse;
 import frc.robot.commands.ClimbPeriodic;
 import frc.robot.commands.ClimbSequence1;
 import frc.robot.commands.DriveBaseTeleopCommand;
 import frc.robot.commands.HookLock;
 import frc.robot.commands.HookUnlock;
-import frc.robot.commands.IntakeForwardCommand;
-import frc.robot.commands.IntakeReverseCommand;
+import frc.robot.commands.IntakeForward;
+import frc.robot.commands.IntakeReverse;
 import frc.robot.commands.ShooterHeld;
 import frc.robot.subsystems.CDSSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -43,26 +42,26 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // subsystems
-  private static ClimbSubsystem climbSubsystem;
   private static DriveBaseSubsystem driveBaseSubsystem;
-  private static CDSSubsystem CDSSubsystem;
   private static IntakeSubsystem intakeSubsystem;
-  private static ShooterSubsystem shooterSubsystem;
+  private static CDSSubsystem CDSSubsystem;
   private static StopperSubsystem stopperSubsystem;
+  private static ShooterSubsystem shooterSubsystem;
+  private static ClimbSubsystem climbSubsystem;
 
   // commands
   private DriveBaseTeleopCommand driveBaseTeleopCommand;
-  private ShooterHeld shooterHeld;
 
-  private IntakeForwardCommand intakeForwardCommand;
-  private CDSForwardCommand CDSForwardCommand;
+  private IntakeForward intakeForwardCommand;
+  private CDSForward CDSForwardCommand;
   private ParallelCommandGroup combinedIntake;
 
-  private IntakeReverseCommand intakeReverseCommand;
-  private CDSReverseCommand CDSReverseCommand;
+  private IntakeReverse intakeReverseCommand;
+  private CDSReverse CDSReverseCommand;
   private ParallelCommandGroup combinedOuttake;
 
-  // ----------climb---------
+  private ShooterHeld shooterHeld;
+
   private InstantCommand climbEnable;
   private ClimbSequence1 climbSequence1;
   private ClimbPeriodic climbPeriodic;
@@ -74,25 +73,8 @@ public class RobotContainer {
   private AutonModes autonModes;
   private Command chosenAutonMode = null;
 
-  // Controller Check VariablesdefaultValue
-  private NetworkTableEntry sbaxisCount1;
-  private NetworkTableEntry sbbuttonCount0;
-  private NetworkTableEntry sbbuttonCount1;
-  private NetworkTableEntry sbaxisCount0;
-  private int axisCount0;
-  private int buttonCount0;
-  private int axisCount1;
-  private int buttonCount1;
-
   // The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
-    controllerDetection = Shuffleboard.getTab("Controller Detector");
-
-    sbaxisCount0 = controllerDetection.add("Port0 AxisCount", 0).withSize(2, 2).getEntry();
-    sbbuttonCount0 = controllerDetection.add("Port0 ButtonCount", 0).withSize(2, 2).getEntry();
-    sbaxisCount1 = controllerDetection.add("Port1 AxisCount", 0).withSize(2, 2).getEntry();
-    sbbuttonCount1 = controllerDetection.add("Port1 ButtonCount", 0).withSize(2, 2).getEntry();
-
     debugTab = Shuffleboard.getTab("debug");
 
     initSubsystems();
@@ -102,45 +84,33 @@ public class RobotContainer {
   }
 
   private void initSubsystems() {
-
     driveBaseSubsystem = new DriveBaseSubsystem(Constants.usingExternal);
-
-    CDSSubsystem = new CDSSubsystem();
-
     intakeSubsystem = new IntakeSubsystem();
-
-    shooterSubsystem = new ShooterSubsystem();
-
-    climbSubsystem = new ClimbSubsystem();
-    
+    CDSSubsystem = new CDSSubsystem();
     stopperSubsystem = new StopperSubsystem();
+    shooterSubsystem = new ShooterSubsystem();
+    climbSubsystem = new ClimbSubsystem();
   }
 
   private void initCommands() {
     // Initializes commands based on enabled subsystems
-    if (driveBaseSubsystem != null) {
       driveBaseTeleopCommand = new DriveBaseTeleopCommand(driveBaseSubsystem, 
         OI.Driver.getDriveSpeedSupplier(), 
         OI.Driver.getDriveRotationSupplier());
       driveBaseSubsystem.setDefaultCommand(driveBaseTeleopCommand);
-    }
-    if (intakeSubsystem != null) {
-      intakeForwardCommand = new IntakeForwardCommand(intakeSubsystem);
-      intakeReverseCommand = new IntakeReverseCommand(intakeSubsystem);
-    }
-    if (CDSSubsystem != null && stopperSubsystem != null) {
-      CDSForwardCommand = new CDSForwardCommand(CDSSubsystem, stopperSubsystem);
-      CDSReverseCommand = new CDSReverseCommand(CDSSubsystem, stopperSubsystem);
-    }
-    if (intakeSubsystem != null && CDSSubsystem != null && stopperSubsystem != null) {
+
+      intakeForwardCommand = new IntakeForward(intakeSubsystem);
+      intakeReverseCommand = new IntakeReverse(intakeSubsystem);
+
+      CDSForwardCommand = new CDSForward(CDSSubsystem, stopperSubsystem);
+      CDSReverseCommand = new CDSReverse(CDSSubsystem, stopperSubsystem);
+
       combinedIntake = new ParallelCommandGroup(intakeForwardCommand, CDSForwardCommand);
       combinedOuttake = new ParallelCommandGroup(intakeReverseCommand, CDSReverseCommand);
-    }
-    if (shooterSubsystem != null && CDSSubsystem != null) {
-      shooterHeld = new ShooterHeld(shooterSubsystem, CDSSubsystem, stopperSubsystem);
-    }
 
-    if ((climbSubsystem != null) && (driveBaseSubsystem != null)) {
+      shooterHeld = new ShooterHeld(shooterSubsystem, CDSSubsystem, stopperSubsystem);
+
+    if (climbSubsystem != null) {
       climbEnable = new InstantCommand(climbSubsystem::toggleEnabled, climbSubsystem);
       climbPeriodic = new ClimbPeriodic(climbSubsystem, 
         OI.Operator.getClimbArmSupplier(), 
@@ -159,27 +129,20 @@ public class RobotContainer {
   // it to a {@link
   // edu.wpi.first.wpilibj2.command.button.JoystickButton}.
   private void configureButtonBindings() {
-
-    // Intake / CDS
-    if (combinedIntake != null) {
+      //Driver Controls
       OI.Driver.getIntakeButton().whileHeld(combinedIntake);
-    }
-    if (combinedOuttake != null) {
       OI.Driver.getOuttakeButton().whileHeld(combinedOuttake);
-    }
-    if (shooterSubsystem != null && shooterHeld != null) {
+
       OI.Driver.getShootButton().whileHeld(shooterHeld);
-    }
-    if (climbSubsystem != null) {
-      OI.Operator.getEnableClimbButton().whenPressed(climbEnable);
-      OI.Operator.getAutoClimbButton().whileHeld(climbSequence1);
-    }
-    if(CDSForwardCommand != null) {
+
+      //Operator Controls
+      if (climbSubsystem != null) {
+        OI.Operator.getEnableClimbButton().whenPressed(climbEnable);
+        OI.Operator.getAutoClimbButton().whileHeld(climbSequence1);
+      }
+
       OI.Operator.getCDSForwardButton().whileHeld(CDSForwardCommand);
-    }
-    if (combinedOuttake != null) {
       OI.Operator.getOuttakeButton().whileHeld(combinedOuttake);
-    }
   }
 
   public Command getAutonomousCommand(Auton mode) {
