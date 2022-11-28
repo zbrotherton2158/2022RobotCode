@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.common.hardware.MotorController;
 import frc.robot.common.hardware.MotorController.MotorConfig;
@@ -43,16 +42,7 @@ public class ShooterSubsystem extends SubsystemBase {
           .withWidget(BuiltInWidgets.kToggleSwitch)
           .getEntry();
 
-  private ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter Tab");
-  private NetworkTableEntry PID_P;
-  private NetworkTableEntry PID_I;
-  private NetworkTableEntry PID_D;
-  private NetworkTableEntry DSmoothRPM;
-
   public ShooterSubsystem() {
-    if (Constants.DebugMode) {
-      instantiateDebugTab();
-    }
     smoothRPM = 0;
     // Initializes the SparkMAX for the flywheel motors
     shooterMotor = MotorController.constructMotor(MotorConfig.shooterOne);
@@ -67,25 +57,6 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterMotor.enableVoltageCompensation(11);
     shooterTwoMotor.enableVoltageCompensation(11);
     shooterTwoMotor.follow(shooterMotor, true);
-
-    // flywheelPID.setFF(Constants.Shooter.kF);
-
-    DSmoothRPM = shooterTab.add("Smooth RPM", 0.0).getEntry();
-  }
-
-  private void instantiateDebugTab() {
-    shooterTab = Shuffleboard.getTab("Shooter Tab");
-    PID_P = shooterTab.add("PID P", ShooterConstants.kPIDArray[0]).withPosition(0, 1).getEntry();
-    PID_I = shooterTab.add("PID I", ShooterConstants.kPIDArray[1]).withPosition(0, 2).getEntry();
-    PID_D = shooterTab.add("PID D", ShooterConstants.kPIDArray[2]).withPosition(0, 3).getEntry();
-  }
-
-  public void updatePID() {
-    if (Constants.DebugMode) {
-      shooterPIDController.setP(PID_P.getDouble(0));
-      shooterPIDController.setI(PID_I.getDouble(0));
-      shooterPIDController.setD(PID_D.getDouble(0));
-    }
   }
 
   private double getTargetRPM() {
@@ -133,16 +104,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     currentRPM = shooterEncoder.getVelocity();
     smoothRPM = ShooterConstants.kA * currentRPM + smoothRPM * (1 - ShooterConstants.kA);
-
-    DSmoothRPM.setDouble(smoothRPM);
     DRPM.setDouble(currentRPM);
-
-    if (Constants.DebugMode) {
-      if ((shooterPIDController.getP() != PID_P.getDouble(0))
-          || (shooterPIDController.getI() != PID_I.getDouble(0))
-          || (shooterPIDController.getD() != PID_D.getDouble(0))) {
-        updatePID();
-      }
-    }
   }
 }

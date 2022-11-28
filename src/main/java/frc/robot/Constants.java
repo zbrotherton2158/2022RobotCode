@@ -23,9 +23,6 @@ public final class Constants {
     public static final double kOpenLoopRampRate = 0.2;
   }
 
-  // TODO: when true, shooter is over shooting
-  public static final boolean DebugMode = false; // TODO: change to false for competition time
-
   // Constants for wheel motors
   public static final double wheelRadius = 2; // radius of wheel, use for calculating angular values
   // Rate at which the motors reach maximum speed; TODO: tune for optimal performance
